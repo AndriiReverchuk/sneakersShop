@@ -1,0 +1,134 @@
+.overlay {
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   height: 120vh;
+   background-color: rgba(0, 0, 0, 0.5);
+   z-index: 1;
+}
+.drawer {
+   display: flex;
+   overflow: auto;
+   flex-direction: column;
+   position: fixed;
+   width: 385px;
+   height: 100vh;
+   right: 0;
+   background: #ffffff;
+   box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+   padding: 0px 30px;
+   .drawerHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+   }
+   .items {
+      flex: 1 1;
+      overflow: auto;
+   }
+   h2 {
+      margin: 0;
+      margin-top: 30px;
+      margin-bottom: 20px;
+      font-size: 24px;
+   }
+   .cartNoItems {
+      display: flex;
+      position: relative;
+      text-align: center;
+      align-items: center;
+      align-self: center;
+      top: 80px;
+      flex-direction: column;
+      button {
+         width: 80%;
+      }
+   }
+   ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      li {
+         display: flex;
+         justify-content: space-between;
+         div {
+            border-bottom: 1px dashed #dfdfdf;
+            flex: 1;
+            position: relative;
+            top: -4px;
+            margin: 0 5px;
+         }
+      }
+   }
+}
+.greenBtn {
+   padding: 10px 0;
+   margin: 30px 0 30px 0;
+   height: 55px;
+   left: 895px;
+   top: 974px;
+   background: #9dd558;
+   border-radius: 18px;
+   border: 0;
+   color: #ffffff;
+   font-size: 16px;
+   font-weight: 500;
+   cursor: pointer;
+   transition: background 0.1s ease-in-out;
+   &:hover {
+      background: lighten(#9dd558, 5%);
+      .arrowR {
+         right: -120px;
+      }
+      .arrowL {
+         left: -80px;
+      }
+   }
+   .arrowR {
+      position: relative;
+      top: 2px;
+      right: -100px;
+      transition: 0.05s ease-in-out;
+   }
+   .arrowL {
+      position: relative;
+      top: 2px;
+      left: -60px;
+      transition: 0.05s ease-in-out;
+   }
+}
+.cartItem {
+   display: flex;
+   align-items: center;
+   border: 1px solid #f3f3f3;
+   border-radius: 20px;
+   overflow: hidden;
+   padding: 15px;
+   margin-bottom: 20px;
+   div {
+      margin-right: 20px;
+   }
+   p {
+      margin: 0;
+      font-size: 16px;
+   }
+   b {
+      font-size: 14px;
+   }
+   .cartItemImg {
+      height: 80px;
+      width: 80px;
+      background-size: contain;
+      background-position: 0 10px;
+      background-repeat: no-repeat;
+   }
+}
+.removeBtn {
+   opacity: 0.5;
+   transition: opacity 0.15s ease-in-out;
+   cursor: pointer;
+   &:hover {
+      opacity: 1;
+   }
+}

@@ -1,0 +1,36 @@
+header {
+   display: flex;
+   justify-content: space-between;
+   padding: 40px;
+   border-bottom: 1px solid #eaeaea;
+   .headerLeft {
+      display: flex;
+      align-items: center;
+      h3,
+      p {
+         margin: 0 auto;
+      }
+      h3 {
+         text-transform: uppercase;
+      }
+      img {
+         margin-right: 15px;
+      }
+   }
+   .headerRight {
+      display: flex;
+      justify-content: space-between;
+      list-style-type: none;
+
+      li {
+         display: flex;
+         align-items: center;
+         &:first-child {
+            cursor: pointer;
+         }
+      }
+      img {
+         margin: 0 15px;
+      }
+   }
+}
