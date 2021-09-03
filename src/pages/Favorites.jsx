@@ -1,7 +1,11 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
+import AppContext from '../context';
 import Card from '../components/Card';
 
-function Favorites({ favorites, addToCard, onAddToFavorite }) {
+function Favorites({ addToCard, onAddToFavorite }) {
+   const { favorites } = React.useContext(AppContext);
+   console.log(favorites);
    return (
       <div className='content'>
          {favorites.length > 0 ? (
@@ -13,20 +17,18 @@ function Favorites({ favorites, addToCard, onAddToFavorite }) {
                   <h1>Мои закладки</h1>
                </div>
                <div className='cards'>
-                  {favorites.map((item, i) => {
-                     return (
-                        <Card
-                           key={i}
-                           title={item.title}
-                           price={item.price}
-                           imgUrl={item.imgUrl}
-                           onPlus={addToCard}
-                           favorited={true}
-                           id={item.id}
-                           onFavorite={onAddToFavorite}
-                        />
-                     );
-                  })}
+                  {favorites.map((item, i) => (
+                     <Card
+                        key={i}
+                        title={item.title}
+                        price={item.price}
+                        imgUrl={item.imgUrl}
+                        onPlus={addToCard}
+                        favorited={true}
+                        id={item.id}
+                        onFavorite={onAddToFavorite}
+                     />
+                  ))}
                </div>
             </>
          ) : (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Card.module.scss';
 import ContentLoader from 'react-content-loader';
+import AppContext from '../../context';
 function Card({
    id,
    imgUrl,
@@ -9,18 +10,17 @@ function Card({
    onPlus,
    onFavorite,
    favorited = false,
-   added = false,
    loading = false,
 }) {
-   const [isAdded, setIsAdded] = useState(added);
+   const { isItemAdded } = React.useContext(AppContext);
    const [isFavorite, setIsFavorite] = useState(favorited);
+   const itemObj = { imgUrl, title, price, id, parentId: id };
    const onClickPlus = () => {
-      setIsAdded(!isAdded);
-      onPlus({ imgUrl, title, price, id });
+      onPlus(itemObj);
    };
    const onClickFavorite = () => {
       setIsFavorite(!isFavorite);
-      onFavorite({ imgUrl, title, price, id });
+      onFavorite(itemObj);
       console.log(id);
    };
    return (
@@ -44,16 +44,18 @@ function Card({
             </ContentLoader>
          ) : (
             <>
-               <div className={styles.favorite} onClick={onClickFavorite}>
-                  <img
-                     src={
-                        !isFavorite
-                           ? '/img/HeartGrey.svg'
-                           : '/img/HeartPink.svg'
-                     }
-                     alt='Heart'
-                  />
-               </div>
+               {onFavorite && (
+                  <div className={styles.favorite} onClick={onClickFavorite}>
+                     <img
+                        src={
+                           !isFavorite
+                              ? '/img/HeartGrey.svg'
+                              : '/img/HeartPink.svg'
+                        }
+                        alt='Heart'
+                     />
+                  </div>
+               )}
                <img width={'100%'} height={112} src={imgUrl} alt='shoes' />
                <h5>{title}</h5>
                <div className={styles.cardBottom}>
@@ -63,24 +65,19 @@ function Card({
                         {price[0]} {price.slice(1)} грн.
                      </b>
                   </div>
-                  {!isAdded ? (
+                  {onPlus && (
                      <button className={styles.btnB} onClick={onClickPlus}>
                         <img
-                           width={11}
-                           height={11}
-                           src='/img/plus.svg'
+                           width={!isItemAdded(id) ? '40%' : '100%'}
+                           height={!isItemAdded(id) ? '40%' : '100%'}
+                           src={
+                              !isItemAdded(id)
+                                 ? '/img/plus.svg'
+                                 : '/img/btn-checked.svg'
+                           }
                            alt='plus'
                         />
                      </button>
-                  ) : (
-                     <img
-                        className={styles.btnB}
-                        onClick={onClickPlus}
-                        width={11}
-                        height={11}
-                        src='/img/btn-checked.svg'
-                        alt='plus'
-                     />
                   )}
                </div>
             </>

@@ -1,17 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Info from '../Info';
 import styles from './Drawer.module.scss';
-function Drawer({ total, onClose, onRemove, items = [] }) {
-   const totalPrice = () => {
-      let money = 0;
-      items.length !== 0 &&
-         items.forEach((item) => {
-            money += Number(item.price);
+import axios from 'axios';
+import { useCart } from '../../hooks/useCart';
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+function Drawer({ onClose, onRemove, opened, items = [] }) {
+   const { cartItems, setCartItems, totalPrice } = useCart();
+   const [orderId, setOrderId] = useState(null);
+   const [isOrderComplete, setIsOrderComplete] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
+
+   const onClickOrder = async () => {
+      try {
+         setIsLoading(true);
+         const { data } = await axios.post(
+            'https://61143472cba40600170c1e67.mockapi.io/orders',
+            { items: cartItems }
+         );
+         setOrderId(data.id);
+         setIsOrderComplete(true);
+         setCartItems([]);
+         cartItems.forEach(async (element) => {
+            await axios.delete(
+               'https://61143472cba40600170c1e67.mockapi.io/cart/' + element.id
+            );
+            await delay(1000);
          });
-      total(money);
-      return money;
+      } catch (err) {
+         alert('Ошибка при создании заказа :(');
+      }
+      setIsLoading(false);
    };
    return (
-      <div className={styles.overlay}>
+      <div
+         className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}
+      >
          <div className={styles.drawer}>
             <h2 className={styles.drawerHeader}>
                Корзина
@@ -23,27 +46,15 @@ function Drawer({ total, onClose, onRemove, items = [] }) {
                />
             </h2>
             {items.length === 0 ? (
-               <div className={styles.cartNoItems}>
-                  <img
-                     className={styles.basket}
-                     width={120}
-                     heigth={120}
-                     src='/img/basket.svg'
-                     alt='basket'
-                  />
-                  <h3>Корзина пустая</h3>
-                  <p>
-                     Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.
-                  </p>
-                  <button onClick={onClose} className={styles.greenBtn}>
-                     <img
-                        className={styles.arrowL}
-                        src='/img/arrowL.svg'
-                        alt='arrow'
-                     />
-                     Вернутся назад
-                  </button>
-               </div>
+               <Info
+                  title={isOrderComplete ? 'Заказ оформлен' : 'Корзина пустая'}
+                  img={isOrderComplete ? '/img/Done.svg' : '/img/basket.svg'}
+                  description={
+                     isOrderComplete
+                        ? `Ваш заказ №${orderId} передан в курьерскую доставку`
+                        : 'Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ.'
+                  }
+               />
             ) : (
                <>
                   <div className={styles.items}>
@@ -76,15 +87,19 @@ function Drawer({ total, onClose, onRemove, items = [] }) {
                      <li>
                         <span>Итого:</span>
                         <div></div>
-                        <b>грн.</b>
+                        <b>{totalPrice} грн.</b>
                      </li>
                      <li>
                         <span>Налог 5%:</span>
                         <div></div>
-                        <b> грн.</b>
+                        <b>{Math.round(totalPrice * 0.05)} грн.</b>
                      </li>
                   </ul>
-                  <button className={styles.greenBtn}>
+                  <button
+                     disabled={isLoading}
+                     onClick={onClickOrder}
+                     className={styles.greenBtn}
+                  >
                      Оформить заказ{' '}
                      <img
                         className={styles.arrowR}
